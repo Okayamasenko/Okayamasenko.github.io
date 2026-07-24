@@ -1,0 +1,144 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+export const getStaticPaths = (async () => {
+  const all = await getCollection('posts');
+  // 生产构建里草稿不生成页面；本地 dev 可预览
+  const visible = all.filter((p) => import.meta.env.PROD ? p.data.draft !== true : true);
+  return visible.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props { post: CollectionEntry<'posts'> }
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+---
+<Layout title={`${post.data.title} — Senko`} description={post.data.summary} active="posts">
+  <article class="post">
+    {post.data.draft && <span class="draft-badge">草稿 · 仅本地可见</span>}
+    <h1>{post.data.title}</h1>
+
+    <div class="meta">
+      <time>{fmt(post.data.date)}</time>
+      {post.data.source && <><span class="dot">·</span><span>{post.data.source}</span></>}
+      {post.data.originalUrl && (
+        <><span class="dot">·</span>
+        <a href={post.data.originalUrl} target="_blank" rel="noopener">原帖</a></>
+      )}
+    </div>
+
+    {post.data.cover && (
+      <img class="cover" src={post.data.cover} alt={post.data.title} />
+    )}
+
+    {post.data.tags.length > 0 && (
+      <div class="tags">{post.data.tags.map((t) => <span>{t}</span>)}</div>
+    )}
+
+    <div class="body">
+      <Content />
+    </div>
+
+    <p class="back"><a href="/posts">← 返回文章列表</a></p>
+  </article>
+</Layout>
+
+<style>
+  .post h1 {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    margin-top: 8px;
+  }
+  .draft-badge {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--current);
+    border: 1px solid var(--current);
+    padding: 0 8px;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .meta {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .meta .dot { color: var(--line); }
+  .meta a { color: var(--current); }
+
+  .cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 24px;
+    border: 1px solid var(--line);
+  }
+
+  .tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 16px; }
+  .tags span {
+    font-size: 12px;
+    color: var(--current);
+    letter-spacing: 0.06em;
+  }
+  .tags span::before { content: '#'; opacity: 0.5; }
+
+  /* ---------- 正文排版 ---------- */
+  .body { margin-top: 32px; }
+  .body :global(h2) {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 38px 0 14px;
+  }
+  .body :global(h3) {
+    font-size: 1.08rem;
+    font-weight: 700;
+    margin: 28px 0 12px;
+  }
+  .body :global(p) { margin: 16px 0; }
+  .body :global(ul), .body :global(ol) { margin: 16px 0; padding-left: 1.4em; }
+  .body :global(li) { margin: 6px 0; }
+  .body :global(img) {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    margin: 20px 0;
+  }
+  .body :global(blockquote) {
+    margin: 20px 0;
+    padding: 4px 18px;
+    border-left: 2px solid var(--wave);
+    color: var(--muted);
+  }
+  .body :global(a) { color: var(--current); }
+  .body :global(code) {
+    background: rgba(14,127,158,0.08);
+    padding: 1px 6px;
+    font-size: 0.9em;
+  }
+  .body :global(pre) {
+    background: var(--abyss);
+    color: #eaf4f8;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+  .body :global(pre code) { background: none; padding: 0; }
+
+  .back { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .back a { color: var(--current); text-decoration: none; }
+  .back a:hover { text-decoration: underline; }
+</style>

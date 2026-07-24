@@ -1,0 +1,266 @@
+---
+// ============================================================
+// 全站共享布局 · 蓝色大海主色 · 无印良品式极简
+//
+// 设计硬规则：
+//   1) 字体全部无衬线（Noto Sans SC），不用衬线体；
+//   2) 任何模块都不要阴影（无 box-shadow）；
+//   3) 克制装饰、留白多、细线条、哑光。
+//
+// 所有页面都套这个 Layout：统一配色、字体、顶部导航、语言切换、
+// 波浪签名元素、页脚。页面自己只写正文。
+//
+// i18n：目前只生成中文页。语言切换的 EN/日/DE 暂时指回中文
+// （lang 路由以后再建），中文按钮高亮。
+// ============================================================
+export interface Props {
+  title: string;
+  description?: string;
+  active?: 'home' | 'about' | 'projects' | 'posts' | 'contact';
+  wave?: boolean;
+}
+
+const {
+  title,
+  description = '在 AI 与语言之间做东西的人。',
+  active,
+  wave = false,
+} = Astro.props;
+
+const nav = [
+  { key: 'home', href: '/', label: '首页' },
+  { key: 'about', href: '/about', label: '关于' },
+  { key: 'projects', href: '/projects', label: '项目' },
+  { key: 'posts', href: '/posts', label: '文章' },
+  { key: 'contact', href: '/contact', label: '联系' },
+] as const;
+
+const langs = [
+  { code: 'zh', label: '中', href: '/', active: true },
+  { code: 'en', label: 'EN', href: '/', active: false },
+  { code: 'ja', label: '日', href: '/', active: false },
+  { code: 'de', label: 'DE', href: '/', active: false },
+] as const;
+---
+
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style is:global>
+    :root {
+      --abyss: #0b2f45;      /* 深海 — 主文字 */
+      --foam:  #f4f8fa;      /* 海面 — 顶部背景（更哑、更纸感） */
+      --tide:  #e3edf1;      /* 深处 — 底部背景 */
+      --current:#0e7f9e;     /* 潮 — 点缀色 */
+      --wave:  #6aa9c4;      /* 波 — 次要蓝 */
+      --muted: #5b7688;      /* 雾 — 次要文字 */
+      --line:  #d3e0e6;      /* 分隔线 */
+      --sans:  'Noto Sans SC', -apple-system, 'PingFang SC', 'Hiragino Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+
+    body {
+      color: var(--abyss);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.9;
+      font-size: 16px;
+      min-height: 100vh;
+      background: var(--foam);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ---------- 顶部导航 ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--foam);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .bar {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+    }
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 14px;
+      margin-left: auto;
+    }
+    .site-nav a {
+      font-size: 14.5px;
+      font-weight: 400;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 4px 2px;
+      border-bottom: 1.5px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .site-nav a:hover { color: var(--abyss); }
+    .site-nav a[aria-current="page"] {
+      color: var(--abyss);
+      border-bottom-color: var(--current);
+    }
+    .site-nav a:focus-visible {
+      outline: 2px solid var(--current);
+      outline-offset: 2px;
+    }
+
+    /* ---------- 语言切换 ---------- */
+    .lang-toggle {
+      display: flex;
+      border: 1px solid var(--line);
+    }
+    .lang-toggle a {
+      font-size: 12.5px;
+      line-height: 1;
+      padding: 6px 9px;
+      text-decoration: none;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+    }
+    .lang-toggle a + a { border-left: 1px solid var(--line); }
+    .lang-toggle a[aria-current="true"] {
+      background: var(--current);
+      color: #fff;
+    }
+    .lang-toggle a[aria-disabled="true"] { cursor: default; }
+    .lang-toggle a:focus-visible {
+      outline: 2px solid var(--current);
+      outline-offset: 2px;
+    }
+
+    /* ---------- 通用小节标题 ---------- */
+    h2.section-h {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    h2.section-h .tilde { color: var(--wave); font-weight: 400; }
+    h2.section-h::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    main { padding: 52px 0 8px; }
+    p + p { margin-top: 1em; }
+
+    /* ---------- 页脚 ---------- */
+    footer.site-footer {
+      margin-top: 48px;
+      padding: 30px 0 56px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+    footer.site-footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    footer.site-footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/">Senko</a>
+      <nav class="site-nav" aria-label="主导航">
+        {nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={active === item.key ? 'page' : undefined}
+          >{item.label}</a>
+        ))}
+      </nav>
+      <nav class="lang-toggle" aria-label="Language" style="margin-left:6px">
+        {langs.map((l) => (
+          <a
+            href={l.href}
+            hreflang={l.code}
+            aria-current={l.active ? 'true' : undefined}
+            aria-disabled={l.active ? undefined : 'true'}
+            title={l.active ? undefined : '该语言版本待补，暂时回退中文'}
+          >{l.label}</a>
+        ))}
+      </nav>
+    </div>
+  </header>
+
+  <slot name="hero" />
+
+  {wave && (
+    <div class="wrap">
+      <div class="surface" aria-hidden="true" style="position:relative;height:52px;overflow:hidden;margin-top:4px">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:200%;height:100%">
+          <path
+            style="animation:drift 11s linear infinite"
+            d="M0,30 C180,10 360,50 720,30 C1080,10 1260,50 1440,30 L1440,30 C1620,10 1800,50 2160,30 C2520,10 2700,50 2880,30 L2880,60 L0,60 Z"
+            fill="#6aa9c4" opacity="0.20" />
+        </svg>
+      </div>
+    </div>
+  )}
+
+  <main class="wrap">
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 Senko · 福冈，日本</span>
+      <a href="https://github.com/Okayamasenko" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <style is:global>
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) { .surface svg path { animation: none !important; } }
+  </style>
+</body>
+</html>

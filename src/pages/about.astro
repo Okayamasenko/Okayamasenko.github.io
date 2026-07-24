@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="关于 — Senko" active="about">
+  <h2 class="section-h"><span class="tilde">～</span><span>关于我</span></h2>
+
+  <p>
+    本科在北京读德语语言文学，交换去过德国开姆尼茨；现在在九州大学读信息科学方向的硕士，
+    研究英语教育场景下，大语言模型对以东亚语言为母语的学习者所持有的「母语者中心主义」偏见。
+  </p>
+  <p>
+    从文科背景走到今天，路径是这样的：辅修信息科学 → 考下 AWS AI 认证 →
+    用 AI 辅助自己开发了一系列论文检索工具 → 发现同实验室的人被 Python 环境挡在门外 →
+    重写成打开浏览器就能用的 HTML 版 → 实验室四个人日常在用。
+    我最在意的其实是这个循环：观察到真实的障碍，然后把它做没。
+  </p>
+  <p>
+    不写代码的时候，在弹吉他、看英超，或者研究中日德三国高端制造业的竞争格局——
+    最后这件事既是兴趣，也是我的职业坐标。
+  </p>
+
+  <div class="langs">
+    <span>中文 · 母语</span>
+    <span>日本語 · 商务级</span>
+    <span>English · 专业级</span>
+    <span>Deutsch · 日常会话</span>
+  </div>
+
+  <h2 class="section-h" style="margin-top:56px"><span class="tilde">～</span><span>社群</span></h2>
+  <p>
+    运营一个约 60 人的女性 AI 学习社群，帮助更多女性跨过「觉得 AI 跟自己无关」这道门槛。
+  </p>
+</Layout>
+
+<style>
+  .langs {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-right: none;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .langs span {
+    font-size: 13px;
+    padding: 6px 16px;
+    color: var(--muted);
+    border-right: 1px solid var(--line);
+  }
+  @media (max-width: 480px) {
+    .langs { flex-direction: column; border-right: 1px solid var(--line); }
+    .langs span { border-right: none; border-bottom: 1px solid var(--line); }
+    .langs span:last-child { border-bottom: none; }
+  }
+</style>

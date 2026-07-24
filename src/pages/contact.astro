@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const links = [
+  { label: 'GitHub', href: 'https://github.com/Okayamasenko', external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/zixuan-yue-1b21473a8/', external: true },
+  { label: 'Email', href: 'mailto:okayamasenko2025@gmail.com', external: false },
+];
+---
+<Layout title="联系 — Senko" active="contact">
+  <h2 class="section-h"><span class="tilde">～</span><span>联系我</span></h2>
+  <p class="lede">找我聊 AI、语言、或者一起造点东西都可以。</p>
+
+  <ul class="contact-list">
+    {links.map((l) => (
+      <li>
+        <a
+          href={l.href}
+          target={l.external ? '_blank' : undefined}
+          rel={l.external ? 'noopener' : undefined}
+        >{l.label}</a>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .lede { color: var(--muted); margin-bottom: 28px; }
+  .contact-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+  }
+  .contact-list a {
+    color: var(--abyss);
+    text-decoration: none;
+    border-bottom: 1.5px solid var(--current);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .contact-list a:hover { color: var(--current); }
+  .contact-list a:focus-visible {
+    outline: 2px solid var(--current);
+    outline-offset: 3px;
+  }
+</style>

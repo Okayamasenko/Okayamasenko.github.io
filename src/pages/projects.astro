@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  {
+    title: '论文检索工具',
+    why: '为自己做了 7 个命令行论文检索工具之后，发现实验室同学卡在 Python 安装这一步——工具再好用，装不上就等于零。',
+    how: '于是重构成纯 HTML 单文件版本，打开浏览器就能用。实验室 4 人采用，文献阅读和组会汇报的效率明显提升。',
+    tags: ['HTML', 'JavaScript', 'LLM API'],
+  },
+  {
+    title: '智能冰箱管理系统',
+    why: '想随时知道冰箱里有什么、什么快过期，但又不想手动记录。',
+    how: '用 ESP32-CAM 拍摄 + Claude Vision API 识别食材 + Telegram Bot 交互，结合膳食指南给出建议，渐进式搭建中。',
+    tags: ['ESP32-CAM', 'Claude Vision API', 'Telegram Bot'],
+  },
+  {
+    title: 'Context Copilot',
+    why: '一个回答「我现在该做什么」的个人副驾——把散落在各处的任务、笔记和行为信号，整合成能直接行动的上下文。',
+    how: '也是我 10 周学习计划的载体：prompt engineering、RAG、agent 开发（工具调用、ReAct、可观测性），边学边把它搭出来。',
+    tags: ['Python', 'RAG', 'Agent'],
+  },
+];
+---
+<Layout title="项目 — Senko" active="projects">
+  <h2 class="section-h"><span class="tilde">～</span><span>做过的东西</span></h2>
+  <p class="lede">都是用 AI 自主开发的——不是「AI 帮我做的」，是我主导、用 AI 造出来的。</p>
+
+  {projects.map((p) => (
+    <article class="project">
+      <h3>{p.title}</h3>
+      <p class="why">{p.why}</p>
+      <p class="how">{p.how}</p>
+      <div class="tags">{p.tags.map((t) => <span>{t}</span>)}</div>
+    </article>
+  ))}
+</Layout>
+
+<style>
+  .lede { color: var(--muted); font-weight: 300; margin-bottom: 12px; }
+  .project { padding: 28px 0; }
+  .project + .project { border-top: 1px solid var(--line); }
+  .project h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .project .why { margin-top: 12px; }
+  .project .how {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 14.5px;
+    font-weight: 300;
+  }
+  .tags {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .tags span {
+    font-size: 12px;
+    color: var(--current);
+    letter-spacing: 0.06em;
+  }
+  .tags span::before { content: '#'; opacity: 0.5; }
+</style>

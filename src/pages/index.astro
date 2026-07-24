@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Senko — AI × 语言" active="home" wave={true}>
+  <header class="hero" slot="hero">
+    <div class="wrap">
+      <p class="kicker">AI × LANGUAGE</p>
+      <h1>Senko</h1>
+      <p class="tagline">在言语与言语之间，架一座桥。</p>
+      <p class="sub">
+        在 AI 与语言之间做东西的人。福冈在住，九州大学在读，研究大语言模型在语言教育中的偏见，
+        同时用代码把想法变成别人真的会用的工具。
+      </p>
+    </div>
+  </header>
+
+  <section aria-label="导航概览" class="landing-cards">
+    <a class="card" href="/about">
+      <h3>关于我</h3>
+      <p>从德语语言文学到信息科学，一条把「观察到的障碍」做没的路径。</p>
+    </a>
+    <a class="card" href="/projects">
+      <h3>项目</h3>
+      <p>用 AI 自主开发的工具：论文检索、智能冰箱、Context Copilot。</p>
+    </a>
+    <a class="card" href="/posts">
+      <h3>文章</h3>
+      <p>在这里重新写一份正典版本——网站是内容真正的家。</p>
+    </a>
+    <a class="card" href="/contact">
+      <h3>联系</h3>
+      <p>GitHub、LinkedIn、邮箱。</p>
+    </a>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    padding: 84px 0 8px;
+  }
+  .hero .kicker {
+    color: var(--current);
+    letter-spacing: 0.4em;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-weight: 700;
+    font-size: clamp(3.2rem, 11vw, 6rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+  .hero .tagline {
+    margin-top: 20px;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 500;
+    color: var(--current);
+  }
+  .hero .sub {
+    margin-top: 22px;
+    color: var(--muted);
+    max-width: 32em;
+    font-weight: 300;
+  }
+
+  .landing-cards {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  @media (max-width: 560px) {
+    .landing-cards { grid-template-columns: 1fr; }
+  }
+  .card {
+    display: block;
+    text-decoration: none;
+    padding: 24px 22px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: transparent;
+    transition: background 0.2s;
+  }
+  .card:hover { background: rgba(14,127,158,0.05); }
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .card p { color: var(--muted); font-size: 14px; font-weight: 300; line-height: 1.7; }
+</style>
