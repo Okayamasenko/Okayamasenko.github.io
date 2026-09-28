@@ -30,7 +30,7 @@ const fmt = (d: Date) =>
     {page.data.map((post) => (
       <li class="post-item">
         {post.data.draft && <span class="draft-badge">草稿</span>}
-        <a class="post-link" href={`/posts/${post.slug}`}>
+        <a class="post-link" href={`/posts/${post.id}`}>
           <h3>{post.data.title}</h3>
         </a>
         <div class="meta">

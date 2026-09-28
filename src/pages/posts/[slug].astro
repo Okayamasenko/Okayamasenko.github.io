@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
@@ -9,14 +9,14 @@ export const getStaticPaths = (async () => {
   // 生产构建里草稿不生成页面；本地 dev 可预览
   const visible = all.filter((p) => import.meta.env.PROD ? p.data.draft !== true : true);
   return visible.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }));
 }) satisfies GetStaticPaths;
 
 interface Props { post: CollectionEntry<'posts'> }
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 
 const fmt = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;

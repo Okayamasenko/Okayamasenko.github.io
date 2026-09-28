@@ -19,8 +19,8 @@
 
 ```
 src/
+  content.config.ts        # content collection 的 schema 定义（Astro 7 起放在 src/ 下）
   content/
-    config.ts              # content collection 的 schema 定义
     posts/
       2026-02-14-my-post.md   # 一篇文章 = 一个 md 文件
   pages/
@@ -41,7 +41,7 @@ public/
 
 ## 文章 frontmatter schema
 
-每篇 `.md` 顶部的 frontmatter 必须符合下面结构（`src/content/config.ts` 里用 zod 强校验，字段对不上构建会报错）：
+每篇 `.md` 顶部的 frontmatter 必须符合下面结构（`src/content.config.ts` 里用 zod 强校验，字段对不上构建会报错）：
 
 ```yaml
 ---
@@ -57,13 +57,15 @@ draft: true                  # 草稿关卡：新文章一律先 true，见下�
 ---
 ```
 
-对应的 `src/content/config.ts`（供搭建时参考，Claude Code 按需调整）：
+对应的 `src/content.config.ts`（供搭建时参考，Claude Code 按需调整）：
 
 ```ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const posts = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
