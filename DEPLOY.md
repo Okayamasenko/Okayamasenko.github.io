@@ -32,7 +32,7 @@ GitHub 仓库存的是**源**（`.astro` + `.md`），不是能直接访问的�
 3. 加一个 workflow（`.github/workflows/deploy.yml`），push 到主分支就构建 + 部署。Astro 官方有现成的 GitHub Pages Action，直接用，别手写复杂脚本。
 4. 跑通验收标准：**改一个字 → `git push` → 一两分钟后线上自动更新**。这条闭环通了，第一阶段就完成了。
 
-**验证草稿关卡**：确认生产构建里 `draft: true` 的文章不会出现在线上（`src/content/config.ts` + 列表/文章页在 `import.meta.env.PROD` 时过滤掉草稿）。本地 `npm run dev` 能看到草稿，线上看不到，才算对。
+**验证草稿关卡**：确认生产构建里 `draft: true` 的文章不会出现在线上（`src/content.config.ts` + 列表/文章页在 `import.meta.env.PROD` 时过滤掉草稿）。本地 `npm run dev` 能看到草稿，线上看不到，才算对。
 
 ---
 
